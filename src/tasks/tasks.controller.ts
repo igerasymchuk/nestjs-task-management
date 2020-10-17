@@ -2,14 +2,17 @@ import { Controller, Get, Post, Delete, Patch, Body, Param, Query, UsePipes, Val
 import { TasksService } from './tasks.service';
 //import { Task, TaskStatus } from './task.model';
 import { CreateTaskDto } from './dto/create-task.dto';
-import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
+import { GetTasksFilterDto, PatchTasksDto } from './dto/get-tasks-filter.dto';
 import { TaskStatusValidationPipe } from './pipes/task-status-validation.pipe';
 import { Task } from './task.entity';
 import { TaskStatus } from './task-status.enum';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from '../auth/get-user.decorator';
 import { User } from '../auth/user.entity';
+import { ApiBearerAuth, ApiBody, ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
 
+@ApiBearerAuth()
+@ApiTags('tasks')
 @Controller('tasks')
 @UseGuards(AuthGuard())
 export class TasksController {
@@ -40,6 +43,10 @@ export class TasksController {
     }
 
     @Post()
+    @ApiCreatedResponse({
+        description: 'The task has been successfully created.',
+        type: Task,
+    })
     @UsePipes(ValidationPipe)
     createTask(
         @Body() createTaskDto: CreateTaskDto,
@@ -59,6 +66,8 @@ export class TasksController {
     }
 
     @Patch('/:id/status')
+    @ApiBody({ type: PatchTasksDto, required: false })
+    //@Query(ValidationPipe) filterDto: PatchTasksDto,
     async updateTaskStatus(
         @Param('id', ParseIntPipe) id: number,
         @Body('status', TaskStatusValidationPipe) status: TaskStatus,
