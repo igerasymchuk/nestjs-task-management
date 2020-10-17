@@ -14,4 +14,4 @@ export const typeOrmConfig: TypeOrmModuleOptions = {
     entities: [__dirname + '/../**/*.entity.{js,ts}'],
     synchronize: process.env.TYPEORM_SYNC || dbConfig.synchronize,
 }
-//postgres://username:password@host:post/database
+//postgres://username:password@host:port/database
