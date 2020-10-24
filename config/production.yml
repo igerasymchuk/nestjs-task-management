@@ -2,4 +2,4 @@ server:
   origin: 'FRONTEND_HOSTNAME'
 
 db:
-  synchronize: true
+  synchronize: false
